@@ -1,9 +1,8 @@
 FROM php:8.2-apache
 
-# Avoid composer memory issues
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# Install system dependencies
+# System + PHP dependencies
 RUN apt-get update && apt-get install -y \
     git curl unzip zip \
     libpng-dev libonig-dev libxml2-dev libzip-dev libicu-dev \
@@ -11,32 +10,31 @@ RUN apt-get update && apt-get install -y \
         pdo pdo_mysql mbstring exif pcntl bcmath gd zip intl \
     && apt-get clean
 
-# Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files FIRST (important for caching & stability)
+# Copy only composer files first
 COPY composer.json composer.lock ./
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install PHP dependencies (NO scripts yet)
+# 🔑 KEY FIX IS HERE
 RUN composer install \
     --no-dev \
     --no-scripts \
     --no-interaction \
-    --prefer-dist
+    --prefer-dist \
+    --ignore-platform-reqs
 
-# Copy the rest of the Laravel project
+# Copy rest of Laravel app
 COPY . .
 
-# Run composer scripts AFTER files exist
+# Optimize autoloader AFTER code exists
 RUN composer dump-autoload --optimize
 
-# Set permissions
+# Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Apache config
