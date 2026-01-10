@@ -66,6 +66,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/govcap-upload', [GovernmentCapController::class, 'index'])->name('govcap.upload');
     Route::post('/govcap-upload', [GovernmentCapController::class, 'upload'])->name('govcap.upload.submit');
     Route::get('/govcap-download', [GovernmentCapController::class, 'download'])->name('govcap.download');
+    
+    
 });
 
 // Route::get('/', function () {
@@ -92,6 +94,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/shifts/{shift}/close', [PumpShiftController::class, 'close'])
         ->name('shifts.close');
+
+    Route::get('/shifts/{shift}/download-pdf', [PumpShiftController::class, 'downloadPdf'])
+        ->name('shifts.download-pdf');
 });
 
 

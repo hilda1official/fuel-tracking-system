@@ -1,18 +1,20 @@
 <?php $__env->startSection('content'); ?>
+
 <div class="container mx-auto p-6">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold">Shifts Management</h2>
-        <h1 class="text-2xl font-bold">If you want to record sale, open shift then continue</h1>
+       
         <?php if(Auth::user()->isAttendant()): ?>
             <a href="<?php echo e(route('shifts.create')); ?>" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                 Open New Shift
             </a>
+             <h1 class="text-2xl font-bold">If you want to record sale, open shift then continue</h1>
         <?php endif; ?>
     </div>
 
     <?php if(Auth::user()->isAdmin()): ?>
         <div class="mb-4 p-4 bg-blue-100 text-blue-800 rounded">
-            <p>You are viewing all shifts. Only attendants can open and close shifts.</p>
+            <p>You are viewing all shifts. </p>
         </div>
     <?php endif; ?>
 
@@ -158,4 +160,4 @@ function toggleShiftDetails(element) {
 }
 </style>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\SHAYO\Desktop\laravel\tracking\resources\views/shifts/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laravel\tracking\resources\views/shifts/index.blade.php ENDPATH**/ ?>

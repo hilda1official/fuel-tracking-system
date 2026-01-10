@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <style>
     * {
         margin: 0;
@@ -389,26 +389,27 @@
         </div>
         
     </div>
-@foreach($currentShifts as $shift)
+<?php $__currentLoopData = $currentShifts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $shift): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
     <p>
-        <strong>Attendant:</strong> {{ $shift->user->name }} |
-        <strong>Pump:</strong> {{ $shift->pump->name }} |
-        <strong>Period:</strong> {{ ucfirst($shift->shift_period) }}
+        <strong>Attendant:</strong> <?php echo e($shift->user->name); ?> |
+        <strong>Pump:</strong> <?php echo e($shift->pump->name); ?> |
+        <strong>Period:</strong> <?php echo e(ucfirst($shift->shift_period)); ?>
+
     </p>
 
-    @if($shift->status === 'closed')
-        <p><strong>Meter Litres:</strong> {{ number_format($shift->meter_litres ?? 0, 2) }}</p>
-<p><strong>System Litres:</strong> {{ number_format($shift->system_litres ?? 0, 2) }}</p>
-<p><strong>Difference:</strong> {{ number_format($shift->difference ?? 0, 2) }}</p>
-<p><strong>Total Amount:</strong> {{ number_format($shift->total_amount ?? 0, 2) }}</p>
+    <?php if($shift->status === 'closed'): ?>
+        <p><strong>Meter Litres:</strong> <?php echo e(number_format($shift->meter_litres ?? 0, 2)); ?></p>
+<p><strong>System Litres:</strong> <?php echo e(number_format($shift->system_litres ?? 0, 2)); ?></p>
+<p><strong>Difference:</strong> <?php echo e(number_format($shift->difference ?? 0, 2)); ?></p>
+<p><strong>Total Amount:</strong> <?php echo e(number_format($shift->total_amount ?? 0, 2)); ?></p>
 
-    @endif
-@endforeach
+    <?php endif; ?>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     <div class="stats-grid">
         <div class="stat-card sales">
             <div class="stat-label">Your Total Sales</div>
-            <div class="stat-value">{{ number_format($totalSales,2) }}</div>
+            <div class="stat-value"><?php echo e(number_format($totalSales,2)); ?></div>
             <div class="stat-spark">
                 <canvas id="attendantSpark" style="width: 100%; max-width: 150px; height: 40px;"></canvas>
             </div>
@@ -418,12 +419,12 @@
 
         <div class="stat-card litres">
             <div class="stat-label">Your Litres Sold</div>
-            <div class="stat-value">{{ $totalLitres }} L</div>
+            <div class="stat-value"><?php echo e($totalLitres); ?> L</div>
         </div>
 
         <div class="stat-card entries">
             <div class="stat-label">Recent Entries</div>
-            <div class="stat-value">{{ $mySales->count() }}</div>
+            <div class="stat-value"><?php echo e($mySales->count()); ?></div>
         </div>
     </div>
 
@@ -442,18 +443,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($mySales as $sale)
+                    <?php $__empty_1 = true; $__currentLoopData = $mySales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
-                        <td>{{ $sale->created_at->format('Y-m-d H:i') }}</td>
-                        <td>{{ optional($sale->pump)->name }} {{ optional($sale->pump)->code ? '('.optional($sale->pump)->code.')' : '' }}</td>
-                        <td>{{ optional($sale->pump)->fuel_type ?? 'N/A' }}</td>
-                        <td>{{number_format(optional($sale->pump)->price_per_litre ?? 0, 2) }}</td>
-                        <td>{{ $sale->litres_sold }}</td>
-                        <td>{{ number_format($sale->amount,2) }}</td>
+                        <td><?php echo e($sale->created_at->format('Y-m-d H:i')); ?></td>
+                        <td><?php echo e(optional($sale->pump)->name); ?> <?php echo e(optional($sale->pump)->code ? '('.optional($sale->pump)->code.')' : ''); ?></td>
+                        <td><?php echo e(optional($sale->pump)->fuel_type ?? 'N/A'); ?></td>
+                        <td><?php echo e(number_format(optional($sale->pump)->price_per_litre ?? 0, 2)); ?></td>
+                        <td><?php echo e($sale->litres_sold); ?></td>
+                        <td><?php echo e(number_format($sale->amount,2)); ?></td>
                     </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <tr><td colspan="5" class="no-data">No recent sales</td></tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -461,8 +462,8 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const sparkDates = @json($sparkDates ?? []);
-    const sparkValues = @json($sparkValues ?? []);
+    const sparkDates = <?php echo json_encode($sparkDates ?? [], 15, 512) ?>;
+    const sparkValues = <?php echo json_encode($sparkValues ?? [], 15, 512) ?>;
     if (document.getElementById('attendantSpark')) {
         const sctx = document.getElementById('attendantSpark').getContext('2d');
         new Chart(sctx, {
@@ -472,4 +473,6 @@
         });
     }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laravel\tracking\resources\views/attendant/dashboard.blade.php ENDPATH**/ ?>

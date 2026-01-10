@@ -447,7 +447,7 @@
                     <tr>
                         <td><?php echo e($sale->created_at->format('Y-m-d H:i')); ?></td>
                         <td><?php echo e(optional($sale->pump)->name); ?> <?php echo e(optional($sale->pump)->code ? '('.optional($sale->pump)->code.')' : ''); ?></td>
-                        <td><?php echo e(optional($sale->fuel)->name); ?></td>
+                        <td><?php echo e(optional($sale->pump)->fuel_type ?? 'N/A'); ?></td>
                         <td><?php echo e(number_format(optional($sale->pump)->price_per_litre ?? 0, 2)); ?></td>
                         <td><?php echo e($sale->litres_sold); ?></td>
                         <td><?php echo e(number_format($sale->amount,2)); ?></td>

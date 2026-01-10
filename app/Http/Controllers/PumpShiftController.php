@@ -6,6 +6,7 @@ use App\Models\PumpShift;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PumpShiftController extends Controller
 {
@@ -49,7 +50,7 @@ class PumpShiftController extends Controller
     $meterLitres = $closingMeter - $openingMeter;
 
     // Prevent accidental negative meter litres unless admin forces it
-    if ($closingMeter < $openingMeter) {
+    if ($closingMeter > $openingMeter) {
         $canForce = Auth::user() && Auth::user()->isAdmin() && $request->boolean('force', false);
         if (! $canForce) {
             return back()
@@ -132,5 +133,24 @@ public function store(Request $request)
         ->with('success', 'Shift opened successfully. You can now record sales.');
 }
 
+    public function downloadPdf(PumpShift $shift)
+    {
+        $sales = Sale::where('pump_shift_id', $shift->id)->get();
+        
+        $data = [
+            'shift' => $shift,
+            'sales' => $sales,
+            'totalSales' => $sales->count(),
+            'totalLitres' => $sales->sum('litres_sold'),
+            'totalAmount' => $sales->sum('amount'),
+        ];
+
+        $pdf = Pdf::loadView('shifts.pdf', $data)
+            ->setPaper('a4')
+            ->setOption('margin-top', 10)
+            ->setOption('margin-bottom', 10);
+
+        return $pdf->download("Shift_Report_{$shift->id}_{$shift->created_at->format('Y-m-d')}.pdf");
+    }
 
 }

@@ -25,7 +25,7 @@
                     <p class="text-xl font-bold">{{ $shift->closing_meter }}</p>
                 </div>
                 <div>
-                    <p class="text-gray-600">Meter Litres</p>
+                    <p class="text-gray-600">Litres sold</p>
                     <p class="text-xl font-bold text-blue-600">{{ $shift->meter_litres ?? 0 }} L</p>
                 </div>
             </div>

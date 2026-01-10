@@ -1,19 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mx-auto p-6">
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold">Shifts Management</h2>
+       
         @if(Auth::user()->isAttendant())
             <a href="{{ route('shifts.create') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                 Open New Shift
             </a>
+             <h1 class="text-2xl font-bold">If you want to record sale, open shift then continue</h1>
         @endif
     </div>
 
     @if(Auth::user()->isAdmin())
         <div class="mb-4 p-4 bg-blue-100 text-blue-800 rounded">
-            <p>You are viewing all shifts. Only attendants can open and close shifts.</p>
+            <p>You are viewing all shifts. </p>
         </div>
     @endif
 
@@ -106,6 +109,16 @@
                                     <p class="text-2xl font-bold text-green-600">TSH{{ number_format($shift->total_amount ?? 0, 2) }}</p>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Download Section -->
+                        <div class="flex gap-2">
+                            <a href="{{ route('shifts.download-pdf', $shift) }}" class="inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Download PDF
+                            </a>
                         </div>
                     @else
                         <!-- Open Shift Actions -->
