@@ -21,13 +21,15 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy manifest files first for caching
-COPY composer.json composer.lock package.json package-lock.json ./
+COPY composer.json composer.lock ./
+COPY package.json ./
+COPY package-lock.json* ./
 
 # Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Install Node dependencies and build assets
-RUN npm ci && npm run build
+RUN npm ci --prefer-offline --no-audit && npm run build
 
 # Copy application
 COPY . .
