@@ -3,7 +3,7 @@ services:
     name: fuel-tracking-system
     runtime: php
     plan: free
-    buildCommand: composer install --no-interaction && php artisan key:generate && php artisan migrate --force
+    buildCommand: npm install && npm run build && bash render-build.sh
     startCommand: php artisan serve --host 0.0.0.0 --port $PORT
     healthCheckPath: /
     envVars:
